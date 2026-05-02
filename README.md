@@ -73,3 +73,22 @@ Or authenticate with username/password instead of token:
 ## License
 
 AGPL-3.0
+
+npm install -g keyorix-mcp
+
+## Configure in Claude Desktop
+
+Add to ~/Library/Application Support/Claude/claude_desktop_config.json
+
+KEYORIX_SERVER=http://your-server:8080
+KEYORIX_TOKEN=your-session-token
+
+Or use KEYORIX_USERNAME and KEYORIX_PASSWORD instead of token.
+
+## Available tools
+
+list_secrets, get_secret, create_secret, delete_secret, list_environments, get_stats, list_audit_events, list_users
+
+## Requirements: Node.js 18+, Keyorix server v0.1.0+
+
+## License: AGPL-3.0
