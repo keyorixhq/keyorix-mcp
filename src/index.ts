@@ -48,7 +48,7 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-const server = new Server({ name: "keyorix-mcp", version: "0.2.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "keyorix-mcp", version: "0.2.1" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
