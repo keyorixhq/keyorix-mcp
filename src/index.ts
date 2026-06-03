@@ -48,13 +48,13 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-const server = new Server({ name: "keyorix-mcp", version: "0.1.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "keyorix-mcp", version: "0.2.0" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     { name: "list_secrets", description: "List secret metadata (names, types, environments). Returns metadata only — use get_secret to retrieve a value.", inputSchema: { type: "object", properties: { environment: { type: "string" } } } },
     { name: "get_secret", description: "Get the value of a secret by name.", inputSchema: { type: "object", properties: { name: { type: "string" }, environment: { type: "string" } }, required: ["name"] } },
-    { name: "create_secret", description: "Create a new secret.", inputSchema: { type: "object", properties: { name: { type: "string" }, value: { type: "string" }, environment_id: { type: "number" }, type: { type: "string" } }, required: ["name", "value"] } },
+    { name: "create_secret", description: "Create a new secret.", inputSchema: { type: "object", properties: { name: { type: "string" }, value: { type: "string" }, project_id: { type: "number" }, environment_id: { type: "number" }, type: { type: "string" } }, required: ["name", "value"] } },
     { name: "delete_secret", description: "Delete a secret by ID.", inputSchema: { type: "object", properties: { id: { type: "number" } }, required: ["id"] } },
     { name: "list_environments", description: "List all environments.", inputSchema: { type: "object", properties: {} } },
     { name: "get_stats", description: "Get dashboard stats.", inputSchema: { type: "object", properties: {} } },
@@ -86,7 +86,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           name: s.Name,
           type: s.Type,
           environment: s.environment_name,
-          namespace: s.namespace_name,
+          project_id: s.ProjectID,
           created_at: s.CreatedAt,
           is_shared: s.IsShared,
         }));
@@ -102,8 +102,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { content: [{ type: "text", text: "Secret: " + secretName + "\nValue: " + (valueData.data?.value || "(no value)") }] };
       }
       case "create_secret": {
-        const { name: n, value, environment_id = 1, type = "generic" } = args as any;
-        const data: any = await apiPost("/api/v1/secrets", { name: n, value, namespace_id: 1, zone_id: 1, environment_id, type });
+        const { name: n, value, project_id = 1, environment_id = 1, type = "generic" } = args as any;
+        const data: any = await apiPost("/api/v1/secrets", { name: n, value, project_id, environment_id, type });
         return { content: [{ type: "text", text: "Created: " + data.data?.Name + " (ID: " + data.data?.ID + ")" }] };
       }
       case "delete_secret": {
